@@ -23,8 +23,8 @@
 
 ### 1. 下载脚本
 ```bash
-wget -O cf-ddns.sh https://raw.githubusercontent.com/zcp1997/simple-ddns/main/ddns.sh
-chmod +x cf-ddns.sh
+wget -O ddns.sh https://raw.githubusercontent.com/zcp1997/simple-ddns/main/ddns.sh
+chmod +x ddns.sh
 ```
 
 ### 2. 创建配置文件
@@ -66,7 +66,7 @@ crontab -e
 
 每 5 分钟检测一次：
 ```
-*/5 * * * * /ddns.sh /ddns.conf >> /var/log/cf-ddns.log 2>&1
+*/5 * * * * /root/ddns.sh /root/ddns.conf >> /var/log/ddns.log 2>&1
 ```
 
 ## Telegram 通知示例
