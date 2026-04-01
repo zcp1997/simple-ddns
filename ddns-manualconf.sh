@@ -4,7 +4,7 @@
 #  适配: https://github.com/zcp1997/simple-ddns
 # =============================================================
 
-set -euo pipefail
+set -uo pipefail
 
 # ── 颜色 ──────────────────────────────────────────────────────
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
@@ -379,8 +379,12 @@ CRON_LINE="*/$CRON_INTERVAL * * * * $DDNS_SCRIPT_PATH $CONF_PATH >> $LOG_PATH 2>
 CRON_MARKER="# ddns-simple-$DOMAIN"
 
 # 移除旧条目（若有），再追加新条目
-( crontab -l 2>/dev/null | grep -v "$CRON_MARKER" ; \
-  echo "$CRON_LINE  $CRON_MARKER" ) | crontab -
+# crontab -l 无任务时退出码非零，grep -v 无匹配时退出码为1，
+# 用 || true 防止 pipefail 误触发退出
+{
+    crontab -l 2>/dev/null | grep -v "$CRON_MARKER" || true
+    echo "$CRON_LINE  $CRON_MARKER"
+} | crontab -
 
 success "Crontab 已设置:"
 echo -e "  ${YELLOW}$CRON_LINE${NC}"
@@ -388,15 +392,21 @@ echo -e "  ${YELLOW}$CRON_LINE${NC}"
 # ── 立即执行一次 ───────────────────────────────────────────────
 title "立即执行 DDNS 检测"
 info "运行: $DDNS_SCRIPT_PATH $CONF_PATH"
+info "日志同步写入: $LOG_PATH"
 echo -e "${YELLOW}─────────────── 输出开始 ───────────────${NC}"
-bash "$DDNS_SCRIPT_PATH" "$CONF_PATH" && true
-EXEC_STATUS=$?
+# 同时输出到终端和日志文件（tee -a 追加模式）
+{
+    echo "===== $(date '+%Y-%m-%d %H:%M:%S') 手动触发 ====="
+    bash "$DDNS_SCRIPT_PATH" "$CONF_PATH"
+    echo "===== 执行完毕 ====="
+} 2>&1 | tee -a "$LOG_PATH"
+EXEC_STATUS=${PIPESTATUS[0]}
 echo -e "${YELLOW}─────────────── 输出结束 ───────────────${NC}"
 
 if [[ $EXEC_STATUS -eq 0 ]]; then
-    success "执行成功！"
+    success "执行成功！日志已追加至 $LOG_PATH"
 else
-    warn "脚本退出码: $EXEC_STATUS，请检查上方输出或查看日志 $LOG_PATH"
+    warn "脚本退出码: $EXEC_STATUS，请查看上方输出或日志 $LOG_PATH"
 fi
 
 echo
