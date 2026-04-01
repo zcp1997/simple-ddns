@@ -30,8 +30,7 @@ chmod +x ddns.sh
 或者直接使用交互式脚本:
 
 ```bash
-wget -O ddns-manualconf.sh https://raw.githubusercontent.com/zcp1997/simple-ddns/main/ddns-manualconf.sh
-chmod +x ddns-manualconf.sh
+wget -O ddns-manualconf.sh https://raw.githubusercontent.com/zcp1997/simple-ddns/main/ddns-manualconf.sh && chmod +x ddns-manualconf.sh && bash ddns-manualconf.sh
 ```
 
 ### 2. 创建配置文件
