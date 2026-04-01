@@ -126,12 +126,12 @@ fi
 
 case "$RECORD_TYPE" in
     A)
-        IP_API_URL="https://v4.ipgg.cn/ip"
+        IP_API_URL="ip.sb"
         DNS_TYPE="A"
         CURL_FAMILY="-4"
         ;;
     AAAA)
-        IP_API_URL="https://v6.ipgg.cn/ip"
+        IP_API_URL="ip.sb"
         DNS_TYPE="AAAA"
         CURL_FAMILY="-6"
         ;;
