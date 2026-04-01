@@ -30,7 +30,7 @@ chmod +x ddns.sh
 或者直接使用交互式脚本:
 
 ```bash
-wget -O ddns.sh https://raw.githubusercontent.com/zcp1997/simple-ddns/main/ddns-manualconf.sh
+wget -O ddns-manualconf.sh https://raw.githubusercontent.com/zcp1997/simple-ddns/main/ddns-manualconf.sh
 chmod +x ddns-manualconf.sh
 ```
 
